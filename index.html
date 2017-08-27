@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mazes</title>
+    <link rel="stylesheet" href="css/bootstrap-3.3.7.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap-theme-3.3.7.min.css"/>
+    <link rel="stylesheet" href="css/index.css"/>
+
+    <!-- Dependencies -->
+    <script type="text/javascript" src="./lib/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="./lib/bootstrap-3.3.7.min.js"></script>
+    <script type="text/javascript" src="./lib/paper-full.min.js"></script>
+</head>
+<body>
+    <canvas id="canvas" style="position:absolute; width:100%; height:100%; z-index: -1;"></canvas>
+
+    <div class="collapse navbar-collapse js-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="dropdown mega-dropdown open" aria-haspopup="true" aria-expanded="true">
+                <ul class="dropdown-menu mega-dropdown-menu">
+                    <li class="col-md-4">
+                        <ul>
+                            <li class="dropdown-header">Figura</li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-triangle"/>
+                                <label for="menu-figure-triangle">Trójkąt</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-square" checked/>
+                                <label for="menu-figure-square">Kwadrat</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-hexagon"/>
+                                <label for="menu-figure-hexagon">Sześciokąt</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-octagon"/>
+                                <label for="menu-figure-octagon">Ośmiokąt</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-upsilon"/>
+                                <label for="menu-figure-upsilon">Upsilon</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="figure-type" id="menu-figure-circle"/>
+                                <label for="menu-figure-circle">Okrąg</label>
+                            </li>
+                            <li class="dropdown-header">Właściwości LSystem</li>
+                            <li>
+                                <button class="btn btn-default" id="button-add-lsystem-iterations">+</button>
+                                <button class="btn btn-default" id="button-remove-lsystem-iterations">-</button>
+                                Liczba iteracji
+                                <span id="options-l-system"></span>
+                            </li>
+                            <li class="dropdown-header">Właściwości Siatki</li>
+                            <li>
+                                <button class="btn btn-default" id="button-bigger-grid">+</button>
+                                <button class="btn btn-default" id="button-smaller-grid">-</button>
+                                Rozmiar ściany
+                                <span id="options-size"></span>
+                            </li>
+                            <li>
+                                <button class="btn btn-default" id="button-add-column">+</button>
+                                <button class="btn btn-default" id="button-remove-column">-</button>
+                                Ilość kolumn
+                                <span id="options-columns"></span>
+                            </li>
+                            <li>
+                                <button class="btn btn-default" id="button-add-row">+</button>
+                                <button class="btn btn-default" id="button-remove-row">-</button>
+                                Ilość wierszy
+                                <span id="options-rows"></span>
+                            </li>
+                            <li>
+                                <button class="btn btn-default" id="button-more-speed">+</button>
+                                <button class="btn btn-default" id="button-less-speed">-</button>
+                                Szybkość generowania
+                                <span id="options-speed"></span>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="maze-show-cell-text" id="menu-show-cell-text" checked/>
+                                <label for="menu-show-cell-text">Pokaż wagi komórek</label>
+                            </li>
+                            <li class="dropdown-header">Kolorowanie siatki</li>
+                            <li>
+                                <input type="radio" name="maze-color" id="menu-color-red"/>
+                                <label for="menu-color-red">Czerwony</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-color" id="menu-color-green" checked/>
+                                <label for="menu-color-green">Zielony</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-color" id="menu-color-blue"/>
+                                <label for="menu-color-blue">Niebieski</label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="col-md-4">
+                        <ul>
+                            <li class="dropdown-header">Algorytm generowania labiryntu</li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-binary-tree" checked/>
+                                <label for="menu-maze-binary-tree">Drzewo binarne</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-sidewinder" checked/>
+                                <label for="menu-maze-sidewinder">Chodnikowy</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-dfs" checked/>
+                                <label for="menu-maze-dfs">Przeszukiwanie w głąb</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-kruskal"/>
+                                <label for="menu-maze-kruskal">Kruskal</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-recursive"/>
+                                <label for="menu-maze-recursive">Rekursywny</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-simple-prim"/>
+                                <label for="menu-maze-simple-prim">Uproszczony Prim</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-prim"/>
+                                <label for="menu-maze-prim">Prim</label>
+                            </li>
+                            <li class="dropdown-header">Generowanie LSystemu</li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-peano"/>
+                                <label for="menu-maze-peano">Krzywa Peano</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-moor"/>
+                                <label for="menu-maze-moor">Krzywa Moor'a</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="maze-type" id="menu-maze-hilbert"/>
+                                <label for="menu-maze-hilbert">Krzywa Hilbert'a</label>
+                            </li>
+
+                            <li class="dropdown-header">Statystyki</li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-dead-ends"/>
+                                <label for="menu-show-dead-ends">
+                                    Ilość ślepych zaułków: <span id="statistics-dead-ends"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-longest-path"/>
+                                <label for="menu-show-longest-path">
+                                    Najdłuższa ścieżka: <span id="statistics-longest-path"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-vertical-cells"/>
+                                <label for="menu-show-vertical-cells">
+                                    Ilość pionowych komórek: <span id="statistics-vertical-cells"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-horizontal-cells"/>
+                                <label for="menu-show-horizontal-cells">
+                                    Ilość poziomych komórek: <span id="statistics-horizontal-cells"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-crossovers"/>
+                                <label for="menu-show-crossovers">
+                                    Ilość skrzyżowań: <span id="statistics-crossovers"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input type="checkbox" name="statistics-type" id="menu-show-elbows"/>
+                                <label for="menu-show-elbows">
+                                    Ilość zakrętów: <span id="statistics-elbows"></span>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="col-md-4">
+                        <ul>
+                            <li><button class="btn btn-default centralized" id="button-draw">Rysuj</button></li>
+                            <li><button class="btn btn-default centralized" id="button-clear">Czyść</button></li>
+                            <li><button class="btn btn-default centralized" id="button-solve">Rozwiąż</button></li>
+                            <li><button class="btn btn-default centralized" id="button-colorize">Koloruj</button></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- Source Dependencies -->
+    <script type="text/javascript" src="src/infrastructure/exceptions.js"></script>
+    <script type="text/javascript" src="src/infrastructure/random.js"></script>
+    <script type="text/javascript" src="src/infrastructure/iterables.js"></script>
+    <script type="text/javascript" src="src/infrastructure/colors.js"></script>
+    <script type="text/javascript" src="src/infrastructure/bootstrap.js"></script>
+    <script type="text/javascript" src="src/domain/grids/grid.js"></script>
+    <script type="text/javascript" src="src/domain/cells/cell.js"></script>
+    <script type="text/javascript" src="src/domain/cells/octagon.js"></script>
+    <script type="text/javascript" src="src/domain/cells/hexagon.js"></script>
+    <script type="text/javascript" src="src/domain/cells/square.js"></script>
+    <script type="text/javascript" src="src/domain/cells/triangle.js"></script>
+    <script type="text/javascript" src="src/domain/cells/upsilon.js"></script>
+    <script type="text/javascript" src="src/domain/cells/circle.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/binary_tree.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/sidewinder.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/dfs.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/kruskal.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/recursive.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/simple_prim.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/prim.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/peano_curve.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/moor_curve.js"></script>
+    <script type="text/javascript" src="src/domain/mazes/hilbert_curve.js"></script>
+    <script type="text/javascript" src="src/domain/solves/dijkstra.js"></script>
+    <script type="text/javascript" src="src/domain/statistics.js"></script>
+    <script type="text/javascript" src="src/main.js"></script>
+</body>
+</html>
